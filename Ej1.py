@@ -38,13 +38,13 @@ while t < T:
         t = Ta
         Na += 1
         N += 1
-        t_t = funcExp(t, 40) # Ta - (1/100) * math.log(random.random())
+        t_t = funcExp(Ta, 40) # Ta - (1/100) * math.log(random.random())
         Ta = t_t
         if (N == 1):
-            print("Arrived")
-            Td = t + funcExp(t, 100)
+            # print("Arrived")
+            Td = -(1/100) * math.log(random.random())
         
-        A.append(Ta)
+            A.append(Ta)
         
     if (Td < Ta and Td <= T):
         # Request finished, Time is running
@@ -52,12 +52,12 @@ while t < T:
         N -= 1
         Nd += 1
         if (N == 0):
-            print("We don't know")
+            # print("We don't know")
             Td = inf
         else:
-            Td = t + funcExp(t, 40)
+            Td = t + funcExp(Td, 40)
 
-        D.append(Td)
+        D.append(t)
 
     if (min(Ta, Td) > T and N > 0):
         # Request arrived but has to wait
@@ -66,8 +66,8 @@ while t < T:
         Nd += 1
         
         if(N > 0):
-            Td = t + funcExp(t, 40)
-        D.append(Td)
+            Td = t + funcExp(Td, 40)
+        D.append(t)
 
         
     if (min(Ta, Td) > T , N == 0):
@@ -76,5 +76,7 @@ while t < T:
         # break
 
 
-print("Llegaron " , len(A))
-print("Salieron " , len(D))
+# print("Llegaron " , len(A), Tp, Td, Ta)
+# print("Salieron " , len(D))
+print(D[:10])
+print(A[:10])
