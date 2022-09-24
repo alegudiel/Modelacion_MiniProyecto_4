@@ -7,7 +7,7 @@ prov1 = { "lambdaArriving": 40, "lambdaProcesing": 100 }
 prov2 = { "lambdaArriving": 40, "lambdaProcesing": 10 }
 
 
-T = 0 # Simulation Time
+T = 3600 # Simulation Time
 Na = 0 # Number of arrivals
 Nd = 0 # Number of departures
 N = 0 # Number of requests on time T
@@ -20,30 +20,29 @@ A = []
 D = []
 
 # Time of arrival of the next request
-def funcExp(lamVal):
-    return -float((1/lamVal)*math.log(random.random()))
+def funcExp(before, lamVal):
+    return before - float((1/lamVal)*math.log(random.random()))
 
 t0 = random.random()
 Ta = t0
-Td = 0
+Td = inf
 t = 0
-while t < 3600:
-    u = random.random()
-    T = T - (1/3600)*math.log(u)
-    
-    print("valor ta", Ta, Td, N, T)
+while t < T:
+    t += funcExp(t, 40)
 
-    # Case 1: Arrival when it's not closed
+    if (N == 1):
+        print("valor ta", Ta, Td, N, t)
+
+    # Request arrived, Time is running
     if (Ta <= Td and Ta <= T):
-        # Request arrived, Time is running
         t = Ta
         Na += 1
         N += 1
-        t_t = Ta - (1/3600) * math.log(random.random())
+        t_t = funcExp(t, 40) # Ta - (1/100) * math.log(random.random())
         Ta = t_t
         if (N == 1):
             print("Arrived")
-            Td = t + funcExp(3600)
+            Td = t + funcExp(t, 100)
         
         A.append(Ta)
         
@@ -56,7 +55,7 @@ while t < 3600:
             print("We don't know")
             Td = inf
         else:
-            Td = t + funcExp(3600)
+            Td = t + funcExp(t, 40)
 
         D.append(Td)
 
@@ -67,16 +66,15 @@ while t < 3600:
         Nd += 1
         
         if(N > 0):
-            Td = t + funcExp(3600)
-
-        else:
-            D.append(Td)
+            Td = t + funcExp(t, 40)
+        D.append(Td)
 
         
     if (min(Ta, Td) > T , N == 0):
         # Request arrived after time, no request ton queue
         Tp = max(t - T, 0)
-        # print("Termino " , len(D))
-        # print("Termino " , len(A))
         # break
 
+
+print("Llegaron " , len(A))
+print("Salieron " , len(D))
